@@ -1,0 +1,46 @@
+command to run the github environmet
+
+git config --global user.name "YOUR NAME"
+// tell git your name so that the commits are properly labeld
+
+.gitignore
+// ignores all files to ad the the repository that fullfill the ignore file
+   
+
+git config --global user.email "YOUR EMAIL ADDRESS"
+// tell git your email adress
+
+create a directory on the hard - disk 'test'
+cd test
+git init view
+// defines this directory as the init the git repository
+
+git remote add origin https://github.com/3appy/view.git
+// connects the repository of view with the directory
+
+git status
+// get the actual status from the local reporitory
+
+git log
+// get the actual log file
+
+git branch MyBranch
+// creates a new branch
+
+git checkout MyBranch
+// moves to the new branch "MyBranch"
+
+git checkout master
+// moves back to the main branch
+
+git add .
+// add all files ( stage this file ) to the local directory to github
+
+git commit -m 'comment'
+// committed all files that are added to the local repository
+
+git push origin master
+// pushes all committed files to the remote repository
+
+git pull origin master
+// pull all changes from the repository to the remote directory
