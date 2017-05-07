@@ -9,7 +9,7 @@ error_reporting(E_ALL);
  *
  * This file is part of untitledModel.
  *
- * Automatically generated on 08.01.2017, 19:59:50 with ArgoUML PHP module 
+ * Automatically generated on 11.04.2017, 09:41:02 with ArgoUML PHP module 
  * (last revised $Date: 2010-01-12 20:14:42 +0100 (Tue, 12 Jan 2010) $)
  *
  * @author firstname and lastname of author, <author@example.org>
@@ -133,9 +133,12 @@ class boot_view
     {
      return
      $this->get_html_head() .
+     "<div id=\"wrapper\">" .
      $this->get_nav() .
      $this->get_main() .
      $this->get_footer() .
+     "</div>" .
+     //<!-- /#wrapper -->
      $this->get_html_foot();
     }
     /**
@@ -164,22 +167,28 @@ class boot_view
      switch($includes)
      {
      case ( 0 ):
-     // simple boot includes
+     // simple external includes
      {
      if( defined('__ROOT_VIEW__') == FALSE )
      { define('__ROOT_VIEW__', $this->get_root_view() ); }
-     require_once(__ROOT_VIEW__. 
-     'view/_basic_view/class.includes_simple_head.php' );
+     require_once(__ROOT_VIEW__.
+     'view/_basic_view/class.includes_ext_head.php' );
      
-     $head = new includes_simple_head();
-     return $head->get_representation( $this->get_includes() );
+     $head = new includes_ext_head();
+     return $head->get_representation();
      }
      break;
      
      case ( 1 ):
-     // advanved boot includes
+     // simple internal includes
      {
-     ;
+     if( defined('__ROOT_VIEW__') == FALSE )
+     { define('__ROOT_VIEW__', $this->get_root_view() ); }
+     require_once(__ROOT_VIEW__.
+     'view/_basic_view/class.includes_simple_head.php' );
+     
+     $head = new includes_simple_head();
+     return $head->get_representation();
      }
      break;
      
@@ -207,7 +216,7 @@ class boot_view
      */
     public function get_footer()
     {
-     return
+     return "";
      "<footer>" .
      "<div class=\container\">" .
      "<hr>";
@@ -238,36 +247,12 @@ class boot_view
      */
     public function get_foot_includes()
     {
-     $includes = $this->get_includes();
-     
-     switch($includes)
-     {
-     case ( 0 ):
-     // simple boot includes
-     {
      if( defined('__ROOT_VIEW__') == FALSE )
      { define('__ROOT_VIEW__', $this->get_root_view() ); }
-     require_once(__ROOT_VIEW__. 
+     require_once(__ROOT_VIEW__.
      'view/_basic_view/class.includes_simple_foot.php' );
      
      $foot = new includes_simple_foot();
-     return $foot->get_representation( $this->get_includes() );
-     }
-     break;
-     
-     case ( 1 ):
-     // advanved boot includes
-     {
-     ;
-     }
-     break;
-     
-     default:
-     // simple boot includes
-     {
-     ;
-     }
-     break;
-     }
+     return $foot->get_representation();
     }
 }?>

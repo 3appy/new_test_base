@@ -5,10 +5,14 @@ $files =
 "class.html_head.php",
 "class.html_foot.php",
 "class.includes.php",
+"class.includes_ext_head.php",
 "class.includes_simple_foot.php",
 "class.includes_simple_head.php",
 "class.basic_view.php",
-"class.boot_view.php"
+"class.boot_view.php",
+"class.one_column_view.php",
+"class.three_column_view.php",
+"class.two_column_view.php"
 ];
 
 foreach ($files as  $name )

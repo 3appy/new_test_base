@@ -49,6 +49,28 @@ class b_view
      */
     public function __construct()
     {
-     parent::__construct( null );
+     if( defined('__ROOT_DATA__') == FALSE )
+     { define('__ROOT_DATA__', $this->get_root_data() ); }
+     require_once(__ROOT_DATA__.'class.member.php');
+     
+     parent::__construct( new member() );
+     //$this->watch_relation =
+     //$this->watched_entity->perform_relation( $this->get_watch_entity());
+    }
+    /**
+     *
+     * @access public
+     * @author firstname and lastname of author, <author@example.org>
+     */
+    public function get_nav()
+    {
+     if( defined('__ROOT_VIEW__') == FALSE )
+     { define('__ROOT_VIEW__', $this->get_root_view() ); }
+     require_once(__ROOT_VIEW__. 
+     'view/_navigation/class.navigation.php' );
+     
+     $navigation = new navigation();
+     $navigation->build_navigation();
+     return $navigation->get_representation();
     }
 }?>

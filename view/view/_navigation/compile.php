@@ -1,10 +1,12 @@
 <?php
 
 $files =
-[
-"class.navigation.php",
-"class.top_navigation.php",
-"class.side_navigation.php",
+[       
+"class.external_navigation.php",
+"class.external_top_navigation.php",
+"class.internal_navigation.php",
+"class.internal_top_navigation.php",
+"class.internal_side_navigation.php",
 "class.navigation_list.php",
 "class.navigation_item.php",
 "class.top_message_list.php",

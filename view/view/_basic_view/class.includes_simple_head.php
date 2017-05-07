@@ -9,7 +9,7 @@ error_reporting(E_ALL);
  *
  * This file is part of untitledModel.
  *
- * Automatically generated on 21.12.2016, 12:02:02 with ArgoUML PHP module 
+ * Automatically generated on 11.04.2017, 09:25:20 with ArgoUML PHP module 
  * (last revised $Date: 2010-01-12 20:14:42 +0100 (Tue, 12 Jan 2010) $)
  *
  * @author firstname and lastname of author, <author@example.org>
@@ -50,9 +50,6 @@ class includes_simple_head
 
     // --- OPERATIONS ---
     /**
-     * //"<!-- Bootstrap -->" .
-     * // custom css
-     * // custom fonts
      *
      * @access public
      * @author firstname and lastname of author, <author@example.org>
@@ -65,7 +62,7 @@ class includes_simple_head
      
      "rel=\"stylesheet\"/>" .
      "<link href=\"" . $this->get_root_vendor() .
-     "3appy.css\" " .
+     "3appy_intern.css\" " .
      "rel=\"stylesheet\"/>" .
      
      "<link href=\"" . $this->get_root_vendor() .

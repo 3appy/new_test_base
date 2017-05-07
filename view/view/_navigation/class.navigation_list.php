@@ -9,7 +9,7 @@ error_reporting(E_ALL);
  *
  * This file is part of untitledModel.
  *
- * Automatically generated on 11.01.2017, 12:52:15 with ArgoUML PHP module 
+ * Automatically generated on 21.12.2016, 13:10:35 with ArgoUML PHP module 
  * (last revised $Date: 2010-01-12 20:14:42 +0100 (Tue, 12 Jan 2010) $)
  *
  * @author firstname and lastname of author, <author@example.org>
@@ -49,21 +49,16 @@ class navigation_list
     public $data_array = null;
 
     // --- OPERATIONS ---
-
     /**
-     * #$this->data_array = array();
      *
      * @access public
      * @author firstname and lastname of author, <author@example.org>
      */
     public function __construct()
     {
-        // section 10-5-29--89--2b0abcec:15920f3dcd9:-8000:0000000000001434 begin
-        // section 10-5-29--89--2b0abcec:15920f3dcd9:-8000:0000000000001434 end
+     $this->data_array = array();
     }
-
     /**
-     * #$this->data_array[] = $item;
      *
      * @access public
      * @author firstname and lastname of author, <author@example.org>
@@ -71,12 +66,9 @@ class navigation_list
      */
     public function add_item($item)
     {
-        // section 10-5-29--89--2b0abcec:15920f3dcd9:-8000:0000000000001437 begin
-        // section 10-5-29--89--2b0abcec:15920f3dcd9:-8000:0000000000001437 end
+     $this->data_array[] = $item;
     }
-
     /**
-     * #return $this->data_array[ $n ];
      *
      * @access public
      * @author firstname and lastname of author, <author@example.org>
@@ -84,22 +76,15 @@ class navigation_list
      */
     public function get_item($n)
     {
-        // section 10-5-29--89--2b0abcec:15920f3dcd9:-8000:000000000000143B begin
-        // section 10-5-29--89--2b0abcec:15920f3dcd9:-8000:000000000000143B end
+     return $this->data_array[ $n ];
     }
-
     /**
-     * #return count( $this->data_array );
      *
      * @access public
      * @author firstname and lastname of author, <author@example.org>
      */
     public function get_item_count()
     {
-        // section 10-5-29--89--2b0abcec:15920f3dcd9:-8000:000000000000143F begin
-        // section 10-5-29--89--2b0abcec:15920f3dcd9:-8000:000000000000143F end
+     return count( $this->data_array );
     }
-
-} /* end of class navigation_list */
-
-?>
+}?>

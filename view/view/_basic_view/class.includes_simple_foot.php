@@ -57,9 +57,11 @@ class includes_simple_foot
     public function get_representation()
     {
      return
+     //<!-- jQuery -->
      "<script src=\"https://ajax.googleapis.com/".
      "ajax/libs/jquery/1.12.4/jquery.min.js\"></script>" .
      
+     //<!-- Bootstrap Core JavaScript -->
      "<script src=\"". $this->get_root_vendor() .
      "bootstrap/js/bootstrap.min.js\"></script>";
     }
