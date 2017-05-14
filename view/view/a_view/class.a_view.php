@@ -62,9 +62,9 @@ class a_view
      if( defined('__ROOT_VIEW__') == FALSE )
      { define('__ROOT_VIEW__', $this->get_root_view() ); }
      require_once(__ROOT_VIEW__. 
-     'view/_navigation/class.internal_navigation.php' );
+     'view/_navigation/class.external_navigation.php' );
      
-     $navigation = new internal_navigation();
+     $navigation = new external_navigation();
      $navigation->build_navigation();
      return $navigation->get_representation();
     }

@@ -45,7 +45,7 @@ else
 {
 require_once('../../view/a_view/class.a0_view.php');
 $A0_view = new A0_view();
-$A0_view->set_includes( (int)1 );
+$A0_view->set_includes( (int)0 );
 // define the CSS file as extern
 
 echo $A0_view->get_representation();
