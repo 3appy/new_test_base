@@ -19,12 +19,12 @@ class includes_simple_foot
 // -------------------------------------------------------------
 public function get_representation()
 {
-"<script src=\"". $this->get_root_vendor() .
-return
-"bootstrap/js/bootstrap.min.js\"></script>";
-"<script src=\"https://ajax.googleapis.com/".
-"ajax/libs/jquery/1.12.4/jquery.min.js\"></script>" .
-
+    return
+    "<script src=\"https://ajax.googleapis.com/".
+    "ajax/libs/jquery/1.12.4/jquery.min.js\"></script>" .
+    
+    "<script src=\"". $this->get_root_vendor() .
+    "bootstrap/js/bootstrap.min.js\"></script>";
 }
 
 }

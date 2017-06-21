@@ -1,70 +1,111 @@
 <?php
+// this script is written by Bernd Schröder using AWK in Linux bash
 
-error_reporting(E_ALL);
+// -------------------------------------------------------------
 
-/**
- * untitledModel - class.external_top_navigation.php
- *
- * $Id$
- *
- * This file is part of untitledModel.
- *
- * Automatically generated on 09.04.2017, 19:43:19 with ArgoUML PHP module 
- * (last revised $Date: 2010-01-12 20:14:42 +0100 (Tue, 12 Jan 2010) $)
- *
- * @author firstname and lastname of author, <author@example.org>
- */
-
-if (0 > version_compare(PHP_VERSION, '5')) {
-    die('This file was generated for PHP 5');
-}
-
-/**
- * include navigation_list
- *
- * @author firstname and lastname of author, <author@example.org>
- */
 require_once('class.navigation_list.php');
 
-/* user defined includes */
-// section 10-5-24--17-e85be9e:1597f9b2b9a:-8000:00000000000014DC-includes begin
-// section 10-5-24--17-e85be9e:1597f9b2b9a:-8000:00000000000014DC-includes end
+// -------------------------------------------------------------
 
-/* user defined constants */
-// section 10-5-24--17-e85be9e:1597f9b2b9a:-8000:00000000000014DC-constants begin
-// section 10-5-24--17-e85be9e:1597f9b2b9a:-8000:00000000000014DC-constants end
-
-/**
- * Short description of class external_top_navigation
- *
- * @access public
- * @author firstname and lastname of author, <author@example.org>
- */
 class external_top_navigation
     extends navigation_list
 {
-    // --- ASSOCIATIONS ---
+
+// -------------------------------------------------------------
 
 
-    // --- ATTRIBUTES ---
+// -------------------------------------------------------------
 
-    // --- OPERATIONS ---
-    /**
-     *
-     * @access public
-     * @author firstname and lastname of author, <author@example.org>
-     */
-    public function build_navigation()
-    {
-     ;
-    }
-    /**
-     *
-     * @access public
-     * @author firstname and lastname of author, <author@example.org>
-     */
-    public function get_representation()
-    {
-     ;
-    }
-}?>
+// -------------------------------------------------------------
+public function build_navigation()
+{
+    require_once('class.external_top_navigation_item.php');
+    
+    $nav_item = new external_top_navigation_item();
+    $nav_item->set_text( "Features" );
+    $nav_item->set_link( "#section2" );
+    $this->add_item( $nav_item );
+    
+    $nav_item = new external_top_navigation_item();
+    $nav_item->set_text( "Team" );
+    $nav_item->set_link( "#section3" );
+    $this->add_item( $nav_item );
+    
+    $nav_item = new external_top_navigation_item();
+    $nav_item->set_text( "Aktionen" );
+    $nav_item->set_link( "#section4" );
+    $this->add_item( $nav_item );
+    
+    $nav_item = new external_top_navigation_item();
+    $nav_item->set_text( "Contact" );
+    $nav_item->set_link( "#section5" );
+    $this->add_item( $nav_item );
+    
+    $nav_item = new external_top_navigation_item();
+    $nav_item->set_text( "More" );
+    $nav_item->set_link( "#section6" );
+    $this->add_item( $nav_item );
+}
+
+// -------------------------------------------------------------
+public function get_representation()
+{
+    $nav = 
+    "<nav class=\"navbar navbar-trans navbar-fixed-top\"" .
+    "role=\"navigation\"><div class=\"container\">";
+        
+    $nav .= $this->get_nav_header();
+    $nav .= $this->get_nav_collapse();
+        
+    $nav .= "</div></nav>";
+        
+    return $nav;
+}
+
+// -------------------------------------------------------------
+public function get_nav_header()
+{
+    return
+    "<div class=\"navbar-header\">" .
+    "<button type=\"button\"" . 
+    "class=\"navbar-toggle\"" .
+    "data-toggle=\"collapse\"" . 
+    "data-target=\"#navbar-collapsible\">" .
+    "<span class=\"sr-only\">Toggle navigation</span>" .
+    "<span class=\"icon-bar\"></span>" .
+    "<span class=\"icon-bar\"></span>" .
+    "<span class=\"icon-bar\"></span>" .
+    "</button>" .
+    "<a class=\"navbar-brand\" href=\"#section1\">Launch</a>" .
+    "</div>";
+}
+
+// -------------------------------------------------------------
+public function get_nav_collapse()
+{
+    $nav = 
+    "<div class=\"navbar-collapse collapse\" id=\"navbar-collapsible\">" .
+    "<ul class=\"nav navbar-nav navbar-left\">";
+        
+    for( $i = 0; $i < $this->get_item_count(); $i++ )
+    { $nav .= $this->get_item( $i )->get_representation(); }
+        
+    $nav .= "</ul>";
+    $nav .= $this->get_nav_modal();
+    $nav .= "</ul>";
+        
+    return $nav;
+}
+
+// -------------------------------------------------------------
+public function get_nav_modal()
+{
+    return
+    "<ul class=\"nav navbar-nav navbar-right\">" .
+    "<li><a href=\"#\" data-toggle=\"modal\" data-target=\"#myModal\">" .
+    "Login</a></li>" .
+    "</ul>";
+}
+
+}
+?>

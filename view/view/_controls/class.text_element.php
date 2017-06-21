@@ -3,10 +3,12 @@
 
 // -------------------------------------------------------------
 
+require_once('class.standard_element.php');
 
 // -------------------------------------------------------------
 
-class html_foot
+class text_element
+    extends standard_element
 {
 
 // -------------------------------------------------------------
@@ -15,14 +17,14 @@ class html_foot
 // -------------------------------------------------------------
 
 // -------------------------------------------------------------
-public function get_representation($includes)
+public function get_element()
 {
     return
-    
-    $includes .
-    
-    "</body>" .
-    "</html>";
+    "<div class=\"form-group\">" .
+    "<label for=\"" . $this->name . "\">myname:</label>" .
+    "<input type=\"text\" class=\"form-control\" id=\"" . 
+    $this->name  . "\">" . 
+    "</div>";
 }
 
 }
