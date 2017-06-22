@@ -34,14 +34,14 @@ public function get_nav()
     
     $navigation = new external_navigation();
     $navigation->build_navigation();
-    return ""; //$navigation->get_representation();
+    return $navigation->get_representation();
 }
 
 // -------------------------------------------------------------
 public function get_footer()
 {
     return "";
-    
+        
     return
     "<footer id=\"footer\">" .
     "<div class=\"container\">" .
