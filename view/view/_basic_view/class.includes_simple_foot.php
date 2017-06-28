@@ -24,7 +24,10 @@ public function get_representation()
     "ajax/libs/jquery/1.12.4/jquery.min.js\"></script>" .
     
     "<script src=\"". $this->get_root_vendor() .
-    "bootstrap/js/bootstrap.min.js\"></script>";
+    "bootstrap/js/bootstrap.min.js\"></script>" .
+    
+    "<script src=\"". $this->get_root_vendor() .
+    "3appy/test.js\"></script>";
 }
 
 }

@@ -1,9 +1,9 @@
 <?php
 // Connection Variables to the mysqli database
-$dbhost  = "db623243840.db.1and1.com";
-$dbuser  = "dbo623243840";
-$dbpass  = "1234test1234";
-$dbtable = "db623243840";
+$dbhost  = "localhost";
+$dbuser  = "db_user";
+$dbpass  = "3Vz!to23";
+$dbtable = "3appy_sql";
 $dberror1 = "Could not connect to the database!";
 $dberror2 = "Could not find selected table!";
 

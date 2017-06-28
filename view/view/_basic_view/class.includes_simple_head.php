@@ -7,7 +7,7 @@ require_once('class.includes.php');
 
 // -------------------------------------------------------------
 
-class includes_ext_head
+class includes_simple_head
     extends includes
 {
 
@@ -19,18 +19,18 @@ class includes_ext_head
 // -------------------------------------------------------------
 public function get_representation()
 {
-"rel=\"stylesheet\"/>" .
-return
-"<link href=\"" . $this->get_root_vendor() .
-"3appy_extern.css\" " .
-"rel=\"stylesheet\"/>" .
-
-"<link href=\"" . $this->get_root_vendor() .
-"font-awesome/css/font-awesome.min.css\" " .
-"rel=\"stylesheet\" type=\"text/css\" />";
-"<link href=\"" . $this->get_root_vendor() .
-"bootstrap/css/bootstrap.min.css\" ".
-
+    return
+    "<link href=\"" . $this->get_root_vendor() .
+    "bootstrap/css/bootstrap.min.css\" ".
+    
+    "rel=\"stylesheet\"/>" .
+    "<link href=\"" . $this->get_root_vendor() .
+    "3appy_intern.css\" " .
+    "rel=\"stylesheet\"/>" .
+    
+    "<link href=\"" . $this->get_root_vendor() .
+    "font-awesome/css/font-awesome.min.css\" " .
+    "rel=\"stylesheet\" type=\"text/css\" />";
 }
 
 }

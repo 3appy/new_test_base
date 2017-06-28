@@ -305,5 +305,11 @@ public function get_root_view_elements()
     return $this->get_root() . 'view/view/_elements/';
 }
 
+// -------------------------------------------------------------
+public function get_root_view_controls()
+{
+    return $this->get_root() . 'view/view/_controls/';
+}
+
 }
 ?>

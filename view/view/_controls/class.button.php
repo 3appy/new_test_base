@@ -3,29 +3,35 @@
 
 // -------------------------------------------------------------
 
+require_once('class.standard_element.php');
 
 // -------------------------------------------------------------
 
-class standard_element
+class button
+    extends standard_element
 {
 
 // -------------------------------------------------------------
 
 // -------------------------------------------------------------
-private $id = null;
+private $class = null;
 
 // -------------------------------------------------------------
 
 // -------------------------------------------------------------
-public function set_id($id)
+public function set_class($class)
 {
-    $this->id = $id;
+    $this->class = $class;
 }
 
 // -------------------------------------------------------------
-public function get_id()
+public function get_element()
 {
-    return $this->id;
+    return
+    "<button type=\"button\" " . 
+    "class=\"" . $this->class . "\" " .
+    "id=\"" . $this->get_id()  . "\" " . 
+    ">Send</button>";
 }
 
 }

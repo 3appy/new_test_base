@@ -115,7 +115,7 @@ public function get_not_name_yet()
     $feed->set_amount( (int)1 );
         
     $mail = new no_name_yet();
-    $mail->set_link( "#" );
+    $mail->set_link( "../B/B1_frame.php" );
     $mail->set_panel_type( "panel-primary" );
     $mail->set_fa_symbol( "fa-envelope-o" );
     $mail->set_text( "message" );

@@ -3,9 +3,10 @@
 error_reporting(E_ALL);
 
 /**
- * This Object is the representation of a basic structure of a complete adress
+ * generate me
  *
  * @author Bernd Schröder
+ * @package generated
  * @version 1.0
  */
 
@@ -29,10 +30,11 @@ require_once('class.general_group.php');
 // section -64--88--78-21--21246cb3:13a941081d7:-8000:0000000000000BEA-constants end
 
 /**
- * This Object is the representation of a basic structure of a complete adress
+ * generate me
  *
  * @access public
  * @author Bernd Schröder
+ * @package generated
  * @version 1.0
  */
 class generated_address

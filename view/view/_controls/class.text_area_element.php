@@ -21,8 +21,11 @@ public function get_element()
 {
     return
     "<div class=\"form-group\">" .
-    "<label for=\"" . $this->name . "\">mycomment:</label>" .
-    "<textarea class=\"form-control\" rows=\"5\" id=\"" . $this->name .
+    "<label for=\"" . $this->get_id() . 
+    "\">mytext:</label>" .
+    "<textarea class=\"form-control\" " .
+    "name=\"" . $this->get_id() . "\" " . 
+    "id=\"" . $this->get_id()  . "\"></textarea>" . 
     "</div>";
 }
 
