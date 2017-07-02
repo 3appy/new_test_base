@@ -373,5 +373,17 @@ class generated_member_message
       $this->db_error->serialize();
     }
 
+    public function getJSON()
+    {
+        return
+            "{" .
+            "\"id\":" . $this->get_id() . "," .
+            "\"author_id\":" . $this->get_author_id() . "," .
+            "\"reader_id\":" . $this->get_reader_id() . "," .
+            "\"read_stamp\":\"" . $this->get_read_stamp() . "\"," .
+            "\"text\":\"" . $this->get_text() . "\"" .
+            "}";            
+    }
+
 } /* end of class member_message */
 ?>
