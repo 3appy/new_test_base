@@ -23,6 +23,6 @@ for( $n=0; $n<$message_list->get_item_count(); $n++ )
     $reader->load();
     
 
-    echo "from: " . $author->get_name() . " to: " . $reader->get_name() . "<br>" . $message->getJSON() . "<br>" . "<br>";
+    echo "from: " . $author->get_name() . " to: " . $reader->get_name() . "<br>" . $message->get_text() . "<br>" . "<br>";
 }
 ?>

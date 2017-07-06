@@ -51,7 +51,7 @@ else
 END {
     print "rewrite File: " FILENAME;
     print "<?php" > FILENAME;
-    print "// this script is written by Bernd Schröder using AWK in Linux bash" > FILENAME;
+    print "// this script is written by Bernd Schröder using AWK in Linux bash" >> FILENAME;
     
     print "\n// -------------------------------------------------------------\n" >> FILENAME;
     
