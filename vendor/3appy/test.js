@@ -14,8 +14,8 @@ $(document).ready( function() {
 	    }
 	})
     });
-//    setInterval(function(){
-//	$("#chat_thread").load( "get_data.php" );
-//    }, 10000 )
+    setInterval(function(){
+	$("#chat_thread").load( "get_data.php" );
+    }, 10000 )
     
 })
