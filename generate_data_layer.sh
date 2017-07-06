@@ -12,7 +12,7 @@ do
     if grep -q '* generate me' "$filename"; then
 	printf "compiling: $filename \n";
 	
-#	awk -f handle_file.awk $filename
+	awk -f generatefile.awk $filename
 
 	DESTINATION=$( echo $filename | awk '{print substr( $0, 3 ) }' );
         DESTINATION="$DOMAIN/$DESTINATION";
