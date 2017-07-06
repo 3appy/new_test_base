@@ -120,16 +120,36 @@ function write_insert() {
 	print "   require \"data_connect.php\";" >> FILENAME;
 	print "   $insert_id = 0;" >> FILENAME;
 
+	arraylength=length(variable_list)
+
 	for ( variable_index in variable_list )
-	{ print "$"  variable_list[variable_index]  " = $this->get" variable_list[variable_index] "();" >> FILENAME; }
+	{
+	    variable = variable_list[variable_index];
+	    print "   $"variable " = $this->get_"variable "();" >> FILENAME;
+	}
 
 	print "   INSERT INTO " classname  >> FILENAME;
-	print "(" >> FILENAME;
-
+	print "   (" >> FILENAME;
 	for ( variable_index in variable_list )
-	{ print "$"  variable_list[variable_index]  "," >> FILENAME; }
+	{
+	    if( variable_index < ( arraylength - 1 ) )
+	        { print "   $"  variable_list[variable_index]  "," >> FILENAME; }
+	    else
+		{ print "   $"  variable_list[variable_index] >> FILENAME; }
+	}
+	print "   )" >> FILENAME;
+
+	printf "   VALUES (" >> FILENAME;
+	for ( variable_index in variable_list )
+	{
+	    if( variable_index < ( arraylength - 1 ) )
+	        { printf "?," >> FILENAME; }
+	    else
+	        { printf "?" >> FILENAME; }
+	}
+	print ")\"))" >> FILENAME;	
 	
-	print ")" >> FILENAME;
+
 	print "}" >> FILENAME;
  	print "" >> FILENAME;
 }
