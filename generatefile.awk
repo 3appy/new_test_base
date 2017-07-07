@@ -128,7 +128,8 @@ function write_insert() {
 	    print "   $"variable " = $this->get_"variable "();" >> FILENAME;
 	}
 
-	print "   INSERT INTO " classname  >> FILENAME;
+	print "   if( $stmt = $mysqli->prepare(" >> FILENAME;
+	print "   \"INSERT INTO " classname  >> FILENAME;
 	print "   (" >> FILENAME;
 	for ( variable_index in variable_list )
 	{
@@ -246,5 +247,20 @@ function add_var(var) {
 # add datatype of private variable
 function add_datatype(type) {
     type_list[ type_index++ ] = type;
+}
+
+#-----------------------------------------------------------------------------------
+# get_datatype_character of datatype
+function get_datatype_character(type) {
+    return_value = "i";
+    
+    if( type == "integer" )
+    { return_value = "i"; }
+    else if( type == "string" )
+    { return_value = "s"; }
+    else
+    { return_value = "i"; }
+
+    return return_value;
 }
 #-----------------------------------------------------------------------------------
