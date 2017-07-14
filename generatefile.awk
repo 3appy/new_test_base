@@ -113,9 +113,11 @@ function write_set_and_get() {
 #-----------------------------------------------------------------------------------
 # define the insert function of the model
 function write_insert() {
-	arraylength=length(variable_list)
+ 
+        arraylength=arraysize(variable_list)
 	
-	print "// -------------------------------------------------------------\n" >> FILENAME;    
+
+        print "// -------------------------------------------------------------\n" >> FILENAME;    
 	print "// define the insert function of the model"  >> FILENAME;
 
 #-----------------------------------------------------------------------------------
@@ -251,7 +253,7 @@ function write_insert() {
 #-----------------------------------------------------------------------------------
 # define the load function of the model
 function write_load() {
-	arraylength=length(variable_list)
+        arraylength=arraysize(variable_list)    
 	
 	print "// -------------------------------------------------------------\n" >> FILENAME;    
     	print "// define the load function of the model"  >> FILENAME;
@@ -378,9 +380,106 @@ function write_load() {
 function write_update() {
         print "// -------------------------------------------------------------\n" >> FILENAME;    
     	print "// define the update function of the model"  >> FILENAME;
+
+#-----------------------------------------------------------------------------------
+	
+        # public function update()
+        # {
+	# require "data_connect.php";
+	# $id = $this->get_id();
+	# $author_id = $this->get_author_id();
+	# $reader_id = $this->get_reader_id();
+	# $read_stamp = $this->get_read_stamp();
+	# $text = $this->get_text();
+	
 	print "public function update()" >> FILENAME;
 	print "{" >> FILENAME;
 	print "   require \"data_connect.php\";" >> FILENAME;
+
+	for ( variable_index in variable_list )
+	{
+	    variable = variable_list[variable_index];
+	    print "   $"  variable  " =  $this->get_" variable "();" >> FILENAME;
+	}
+
+#-----------------------------------------------------------------------------------	
+
+	# if( $stmt = $mysqli->prepare(
+	# "UPDATE member_message SET
+	# id=?,
+	# author_id=?,
+	# reader_id=?,
+	# read_stamp=?,
+	# text=?
+	# WHERE id=?"))
+	#{
+	# $stmt->bind_param
+
+	print "   if( $stmt = $mysqli->prepare(" >> FILENAME;
+	print "   \"UPDATE " classname " SET" >> FILENAME;	
+	for ( variable_index in variable_list )
+	{
+	    if( variable_index < ( arraylength - 1 ) )
+	        { print "   " variable_list[variable_index] "=?," >> FILENAME; }
+	    else
+		{ print "   " variable_list[variable_index] "=?" >> FILENAME; }
+	}
+	print "   WHERE id=?\")" >> FILENAME;	
+	print "   {" >> FILENAME;
+	print "   $stmt->bind_param" >> FILENAME;
+	
+#-----------------------------------------------------------------------------------	      
+
+	# (
+	# "iiissi",
+	# $id,
+	# $author_id,
+	# $reader_id,
+	# $read_stamp,
+	# $text,
+	# $id
+	# );
+
+	print "   (" >> FILENAME;
+	printf "   \"" >> FILENAME;
+	
+	for ( variable_index in variable_list )
+	{ printf get_datatype_character( type_list[variable_index] ) >> FILENAME; }
+	print "\"," >> FILENAME;
+
+	for ( variable_index in variable_list )
+	{
+	    if( variable_index < ( arraylength - 1 ) )
+	        { print "   $" variable_list[variable_index] "," >> FILENAME; }
+	    else
+		{ print "   $" variable_list[variable_index] >> FILENAME; }
+	}
+	print "   );" >> FILENAME;	
+
+#-----------------------------------------------------------------------------------
+      
+	# $stmt->execute();
+	# $stmt->close();
+        # }
+	# else
+	# {
+	# $this->db_error->update_error();
+        # }
+	# $mysqli->close();
+	# $this->db_error->serialize();
+
+	print "   $stmt->execute();" >> FILENAME;
+	print "   $stmt->close();" >> FILENAME;
+	print "   };" >> FILENAME;
+	print "   else" >> FILENAME;
+	print "   {" >> FILENAME;
+	print "   $this->db_error->update_error();" >> FILENAME;
+	print "   }" >> FILENAME;
+	print "   $mysqli->close();" >> FILENAME;
+	print "   $this->db_error->serialize();" >> FILENAME;	      		
+
+#-----------------------------------------------------------------------------------
+      
 	print "}" >> FILENAME;
  	print "" >> FILENAME;
 }
@@ -390,22 +489,89 @@ function write_update() {
 function write_delete() {
         print "// -------------------------------------------------------------\n" >> FILENAME;    
     	print "// define the delete function of the model"  >> FILENAME;
+
+        # public function delete()
+        # {
+        # require "data_connect.php";
+	# $id = $this->get_id();
+	# if( $stmt = $mysqli->prepare(
+	# "DELETE FROM member_message
+	# WHERE id=?"))
+	# {
+	# $stmt->bind_param("i",  $id);
+	# $stmt->execute();
+	# $stmt->close();
+        # }
+	# else
+	# {
+	# $this->db_error->delete_error();
+        # }
+	# $mysqli->close();
+	# $this->db_error->serialize();
+        # }	
+      
 	print "public function delete()" >> FILENAME;
 	print "{" >> FILENAME;
 	print "   require \"data_connect.php\";" >> FILENAME;
+	print "   $id = $this->get_id();" >> FILENAME;
+	print "   if( $stmt = $mysqli->prepare(" >> FILENAME;
+	print "   \"DELETE FROM " classname >> FILENAME;
+	print "   WHERE id=?\"))" >> FILENAME;
+	print "   {" >> FILENAME;
+	print "   $stmt->bind_param(\"i\",  $id);" >> FILENAME;
+	print "   $stmt->execute();" >> FILENAME;
+	print "   $stmt->close();" >> FILENAME;
+	print "   }" >> FILENAME;
+	print "   else" >> FILENAME;
+	print "   {" >> FILENAME;
+	print "   $this->db_error->delete_error();" >> FILENAME;
+	print "   }" >> FILENAME;
+	print "   $mysqli->close();" >> FILENAME;
+	print "   $this->db_error->serialize();" >> FILENAME;
 	print "}" >> FILENAME;
  	print "" >> FILENAME;
-}
+      }
 
 #-----------------------------------------------------------------------------------
 # define the getJSON function of the model
 function write_getJSON() {
         print "// -------------------------------------------------------------\n" >> FILENAME;    
     	print "// define the getJSON function of the model"  >> FILENAME;
+
+	# return
+	# "{" .
+	# "\"id\":" . $this->get_id() . "," .
+	# "\"author_id\":" . $this->get_author_id() . "," .
+	# "\"reader_id\":" . $this->get_reader_id() . "," .
+	# "\"read_stamp\":\"" . $this->get_read_stamp() . "\"," .
+	# "\"text\":\"" . $this->get_text() . "\"" .
+	# "}";
+	    
 	print "public function getJSON()" >> FILENAME;
-	print "{" >> FILENAME;
-	print "   return \"{}\";" >> FILENAME;
-	print "}" >> FILENAME;
+	print "   return" >> FILENAME;
+	print "   \"{\" ." >> FILENAME;	
+
+	for ( variable_index in variable_list )
+	{
+	    var = variable_list[variable_index];
+	    type = type_list[variable_index];
+
+	    if( variable_index < ( arraylength - 1 ) )
+	    {
+ 		if( type == "Integer" )
+  	        { print "   \"\\\"" var "\\\":\" . $this->get_" var "() .  \",\" ." >> FILENAME; }
+		else
+	        { print "   \"\\\"" var "\\\":\\\"\" . $this->get_" var "() .  \"\\\",\" ." >> FILENAME; }
+	    }
+	    else
+	    {
+		if( type == "Integer" )
+	        { print "   \"\\\"" var "\\\":\" . $this->get_" var "() . " >> FILENAME;}
+		else
+	        { print "   \"\\\"" var "\\\":\\\"\" . $this->get_" var "() .  \"\\\"\" ." >> FILENAME; }		    
+	    }	
+	}
+	print "   \"}\";" >> FILENAME;
  	print "" >> FILENAME;
 }
 
@@ -434,6 +600,7 @@ function add_includes(myincludes) {
 
 function add_class(myclass) {
      classname = myclass;
+     awk '{split($0,a,"|"); print a[3],a[2],a[1]}'
 }
 
 #-----------------------------------------------------------------------------------
@@ -471,4 +638,11 @@ function get_datatype_character(type) {
 
     return return_value;
 }
+
 #-----------------------------------------------------------------------------------
+function arraysize(a) {  # runtime error unless a is an array
+    n=0;
+    
+    for (i in a) ++n
+    return n
+} 
