@@ -15,7 +15,7 @@ if( $0~ /require_once/ )
 else if( $1~ /class/ )
 {
     # add the classname
-    add_class($0);
+    add_class($2);
 }
 
 else if( $0~ /extends/ )
@@ -43,69 +43,112 @@ else
 }
 
 END {
-    print "rewrite File: " FILENAME;
-    print "<?php" > FILENAME;
-    print "// this script is written by Bernd Schröder using AWK in Linux bash" >> FILENAME;
+    print "rewrite File: " GEN_MODEL;
+    write_generated_model();
+    print "";
+    print "rewrite File: " MODEL;
+#    write_generated_list_model();    
+}
+
+#-----------------------------------------------------------------------------------
+# define set and get function for all variables
+function write_generated_list_model() {
+#    print "<?php" >> GEN_LIST_MODEL;
+#    print "// this script is written by Bernd Schröder using AWK in Linux bash" >> GEN_LIST_MODEL;
+
+#    print "}" >> GEN_LIST_MODEL; 
+
+#    print "?>" >> GEN_LIST_MODEL;   
+}
+
+
+#-----------------------------------------------------------------------------------
+# define set and get function for all variables
+function write_generated_model() {
+    print "<?php" >> GEN_MODEL;
+    print "// this script is written by Bernd Schröder using AWK in Linux bash" >> GEN_MODEL;
     
     write_includes();
     write_class();
-    print "{" >> FILENAME;
+    print "{" >> GEN_MODEL;
+    write_variable_list();
     write_set_and_get();
     write_insert();
     write_load();
     write_update();
     write_delete();
     write_getJSON();
-    print "}" >> FILENAME; 
+    print "}" >> GEN_MODEL; 
 
-    print "?>" >> FILENAME;
+    print "?>" >> GEN_MODEL;   
 }
 
 #-----------------------------------------------------------------------------------
 # define set and get function for all variables
 function write_includes() {
-    print "\n// -------------------------------------------------------------\n" >> FILENAME;
+    print "\n// -------------------------------------------------------------\n" >> GEN_MODEL;
     
     for ( include_index in include_list )
-    { print include_list[include_index] >> FILENAME; }
+    { print include_list[include_index] >> GEN_MODEL; }
 }
 
 #-----------------------------------------------------------------------------------
 # define set and get function for all variables
 function write_class() {
-    print "\n// -------------------------------------------------------------\n" >> FILENAME;
+    print "\n// -------------------------------------------------------------\n" >> GEN_MODEL;
 
-    print classname >> FILENAME;
+    print "class generated_" classname >> GEN_MODEL;
 
     if (length(extends) != 0)
-    { print "    " extends >> FILENAME; }
+    { print "    " extends >> GEN_MODEL; }
 }
 
 #-----------------------------------------------------------------------------------
 # define set and get function for all variables
-function write_set_and_get() {
-    print "" >> FILENAME;
-    print "// start of the set and get functions" >> FILENAME;
-    print "" >> FILENAME;
+function write_variable_list() {
+    print "" >> GEN_MODEL;
+    print "// --- ATTRIBUTES ---" >> GEN_MODEL;
+    print "" >> GEN_MODEL;
 	
     for ( variable_index in variable_list )
     {
 	variable = variable_list[variable_index];
 	datatype = type_list[variable_index];
 	
-	print "// set function for " variable " expect variable of datatype: " datatype  >> FILENAME;
-	print "public function set_"  variable  "( $" variable " )" >> FILENAME;
-	print "{" >> FILENAME;
-	print "   $this->" variable " = $" variable ";" >> FILENAME;
-	print "}" >> FILENAME;
-	print "" >> FILENAME;		
-	print "// get function for " variable " return values is of datatype: " datatype  >> FILENAME;
-	print "public function get_"  variable  "()" >> FILENAME;
-	print "{" >> FILENAME;
-	print "   return $this->" variable ";"  >> FILENAME;
-	print "}" >> FILENAME;
-	print "" >> FILENAME;
-	print "" >> FILENAME;	
+	print "// @access: private"  >> GEN_MODEL;
+	print "// @var: " datatype  >> GEN_MODEL;	
+	print "private $" variable  " = null;" >> GEN_MODEL;
+	print "" >> GEN_MODEL;
+	print "" >> GEN_MODEL;	
+    }
+
+}
+
+#-----------------------------------------------------------------------------------
+# define set and get function for all variables
+function write_set_and_get() {
+    print "" >> GEN_MODEL;
+    print "// start of the set and get functions" >> GEN_MODEL;
+    print "" >> GEN_MODEL;
+	
+    for ( variable_index in variable_list )
+    {
+	variable = variable_list[variable_index];
+	datatype = type_list[variable_index];
+	
+	print "// set function for " variable " expect variable of datatype: " datatype  >> GEN_MODEL;
+	print "public function set_"  variable  "( $" variable " )" >> GEN_MODEL;
+	print "{" >> GEN_MODEL;
+	print "   $this->" variable " = $" variable ";" >> GEN_MODEL;
+	print "}" >> GEN_MODEL;
+	print "" >> GEN_MODEL;		
+	print "// get function for " variable " return values is of datatype: " datatype  >> GEN_MODEL;
+	print "public function get_"  variable  "()" >> GEN_MODEL;
+	print "{" >> GEN_MODEL;
+	print "   return $this->" variable ";"  >> GEN_MODEL;
+	print "}" >> GEN_MODEL;
+	print "" >> GEN_MODEL;
+	print "" >> GEN_MODEL;	
     }
 
 }
@@ -116,9 +159,8 @@ function write_insert() {
  
         arraylength=arraysize(variable_list)
 	
-
-        print "// -------------------------------------------------------------\n" >> FILENAME;    
-	print "// define the insert function of the model"  >> FILENAME;
+        print "// -------------------------------------------------------------\n" >> GEN_MODEL;    
+	print "// define the insert function of the model"  >> GEN_MODEL;
 
 #-----------------------------------------------------------------------------------
 	
@@ -127,10 +169,10 @@ function write_insert() {
 	# require "data_connect.php";
 	# $insert_id = 0;
 	
-	print "public function insert()" >> FILENAME;
-	print "{" >> FILENAME;
-	print "   require \"data_connect.php\";" >> FILENAME;
-	print "   $insert_id = 0;" >> FILENAME;
+	print "public function insert()" >> GEN_MODEL;
+	print "{" >> GEN_MODEL;
+	print "   require \"data_connect.php\";" >> GEN_MODEL;
+	print "   $insert_id = 0;" >> GEN_MODEL;
 
 #-----------------------------------------------------------------------------------
 
@@ -143,7 +185,8 @@ function write_insert() {
 	for ( variable_index in variable_list )
 	{
 	    variable = variable_list[variable_index];
-	    print "   $"variable " = $this->get_"variable "();" >> FILENAME;
+	    if( type_list[variable_index] != "time_stamp" )
+	    { print "   $"variable " = $this->get_"variable "();" >> GEN_MODEL; }
 	}
 
 #-----------------------------------------------------------------------------------
@@ -158,31 +201,37 @@ function write_insert() {
 	# text
 	# )
 
-	print "   if( $stmt = $mysqli->prepare(" >> FILENAME;
-	print "   \"INSERT INTO " classname  >> FILENAME;
-	print "   (" >> FILENAME;
+	print "   if( $stmt = $mysqli->prepare(" >> GEN_MODEL;
+	print "   \"INSERT INTO " classname  >> GEN_MODEL;
+	print "   (" >> GEN_MODEL;
 	for ( variable_index in variable_list )
 	{
-	    if( variable_index < ( arraylength - 1 ) )
-	        { print "   "  variable_list[variable_index]  "," >> FILENAME; }
-	    else
-		{ print "   "  variable_list[variable_index] >> FILENAME; }
+	    if( type_list[variable_index] != "time_stamp" )
+	    {
+		if( variable_index < ( arraylength - 1 ) )
+	        { print "   "  variable_list[variable_index]  "," >> GEN_MODEL; }
+		else
+		{ print "   "  variable_list[variable_index] >> GEN_MODEL; }
+	    }
 	}
-	print "   )" >> FILENAME;
+	print "   )" >> GEN_MODEL;
 
 #-----------------------------------------------------------------------------------		
 
 	# VALUES (?,?,?,?,?)"))
 
-	printf "   VALUES (" >> FILENAME;
+	printf "   VALUES (" >> GEN_MODEL;
 	for ( variable_index in variable_list )
 	{
-	    if( variable_index < ( arraylength - 1 ) )
-	        { printf "?," >> FILENAME; }
-	    else
-	        { printf "?" >> FILENAME; }
+	    if( type_list[variable_index] != "time_stamp" )
+	    {
+		if( variable_index < ( arraylength - 1 ) )
+	        { printf "?," >> GEN_MODEL; }
+		else
+	        { printf "?" >> GEN_MODEL; }
+	    }
 	}
-	print ")\"))" >> FILENAME;	
+	print ")\"))" >> GEN_MODEL;	
 
 #-----------------------------------------------------------------------------------	
 
@@ -191,14 +240,17 @@ function write_insert() {
 	# (
 	# "iiiss",
       
-	print "   {" >> FILENAME;
-	print "   $stmt->bind_param" >> FILENAME;
-	print "   (" >> FILENAME;
-	printf "   \"" >> FILENAME;
+	print "   {" >> GEN_MODEL;
+	print "   $stmt->bind_param" >> GEN_MODEL;
+	print "   (" >> GEN_MODEL;
+	printf "   \"" >> GEN_MODEL;
 	
 	for ( variable_index in variable_list )
-	{ printf get_datatype_character( type_list[variable_index] ) >> FILENAME; }
-	print "\"," >> FILENAME;
+	{
+	    if( type_list[variable_index] != "time_stamp" )
+	    { printf get_datatype_character( type_list[variable_index] ) >> GEN_MODEL; }
+	}
+	print "\"," >> GEN_MODEL;
 	
 #-----------------------------------------------------------------------------------	
 
@@ -211,12 +263,15 @@ function write_insert() {
 
 	for ( variable_index in variable_list )
 	{
-	    if( variable_index < ( arraylength - 1 ) )
-	        { print "   $"  variable_list[variable_index]  "," >> FILENAME; }
-	    else
-		{ print "   $"  variable_list[variable_index] >> FILENAME; }
+	    if( type_list[variable_index] != "time_stamp" )
+	    {
+		if( variable_index < ( arraylength - 1 ) )
+	        { print "   $"  variable_list[variable_index]  "," >> GEN_MODEL; }
+		else
+		{ print "   $"  variable_list[variable_index] >> GEN_MODEL; }
+	    }
 	}
-	print "   );" >> FILENAME;
+	print "   );" >> GEN_MODEL;
 
 #-----------------------------------------------------------------------------------	
 
@@ -232,22 +287,22 @@ function write_insert() {
 	# $this->db_error->serialize();
 	# return $insert_id;
 
-	print "   $stmt->execute();" >> FILENAME;
-	print "   $stmt->close();" >> FILENAME;
-	print "   $insert_id = $mysqli->insert_id;" >> FILENAME;
-	print "   }" >> FILENAME;
-	print "   else" >> FILENAME;
-	print "   {" >> FILENAME;
-	print "   $this->db_error->insert_error();" >> FILENAME;
-	print "   }" >> FILENAME;
-	print "   $mysqli->close();" >> FILENAME;
-	print "   $this->db_error->serialize();" >> FILENAME;
-	print "   return $insert_id;" >> FILENAME;
+	print "   $stmt->execute();" >> GEN_MODEL;
+	print "   $stmt->close();" >> GEN_MODEL;
+	print "   $insert_id = $mysqli->insert_id;" >> GEN_MODEL;
+	print "   }" >> GEN_MODEL;
+	print "   else" >> GEN_MODEL;
+	print "   {" >> GEN_MODEL;
+	print "   $this->db_error->insert_error();" >> GEN_MODEL;
+	print "   }" >> GEN_MODEL;
+	print "   $mysqli->close();" >> GEN_MODEL;
+	print "   $this->db_error->serialize();" >> GEN_MODEL;
+	print "   return $insert_id;" >> GEN_MODEL;
 
 #-----------------------------------------------------------------------------------
 	
-	print "}" >> FILENAME;
- 	print "" >> FILENAME;
+	print "}" >> GEN_MODEL;
+ 	print "" >> GEN_MODEL;
 }
 
 #-----------------------------------------------------------------------------------
@@ -255,8 +310,8 @@ function write_insert() {
 function write_load() {
         arraylength=arraysize(variable_list)    
 	
-	print "// -------------------------------------------------------------\n" >> FILENAME;    
-    	print "// define the load function of the model"  >> FILENAME;
+	print "// -------------------------------------------------------------\n" >> GEN_MODEL;    
+    	print "// define the load function of the model"  >> GEN_MODEL;
 
 #-----------------------------------------------------------------------------------
 	
@@ -266,11 +321,11 @@ function write_load() {
 	# $id = $this->get_id();
 	# if( $stmt = $mysqli->prepare(
 	
-	print "public function load()" >> FILENAME;
-	print "{" >> FILENAME;
-	print "   require \"data_connect.php\";" >> FILENAME;
-	print "   $id = $this->get_id();" >> FILENAME;	
-	print "   if( $stmt = $mysqli->prepare(" >> FILENAME;
+	print "public function load()" >> GEN_MODEL;
+	print "{" >> GEN_MODEL;
+	print "   require \"data_connect.php\";" >> GEN_MODEL;
+	print "   $id = $this->get_id();" >> GEN_MODEL;	
+	print "   if( $stmt = $mysqli->prepare(" >> GEN_MODEL;
 
 #-----------------------------------------------------------------------------------
 	
@@ -284,16 +339,16 @@ function write_load() {
 	# FROM member_message WHERE id=?"))
 	# {
 
-	print "   \"SELECT" >> FILENAME;
+	print "   \"SELECT" >> GEN_MODEL;
 	for ( variable_index in variable_list )
 	{
 	    if( variable_index < ( arraylength - 1 ) )
-	        { print "   " variable_list[variable_index]  "," >> FILENAME; }
+	        { print "   " variable_list[variable_index]  "," >> GEN_MODEL; }
 	    else
-		{ print "   " variable_list[variable_index] >> FILENAME; }
+		{ print "   " variable_list[variable_index] >> GEN_MODEL; }
 	}
-	print "   FROM " classname " WHERE id=?\"))" >> FILENAME;
-	print "   {" >> FILENAME;	
+	print "   FROM " classname " WHERE id=?\"))" >> GEN_MODEL;
+	print "   {" >> GEN_MODEL;	
 
 #-----------------------------------------------------------------------------------
 	
@@ -309,18 +364,18 @@ function write_load() {
 	# $text
 	# );
 
-	print "   $stmt->bind_param('i', $id );" >> FILENAME;
-	print "   $stmt->execute();" >> FILENAME;
-	print "   $stmt->bind_result" >> FILENAME;
-	print "   (" >> FILENAME;	
+	print "   $stmt->bind_param('i', $id );" >> GEN_MODEL;
+	print "   $stmt->execute();" >> GEN_MODEL;
+	print "   $stmt->bind_result" >> GEN_MODEL;
+	print "   (" >> GEN_MODEL;	
 	for ( variable_index in variable_list )
 	{
 	    if( variable_index < ( arraylength - 1 ) )
-	        { print "   $" variable_list[variable_index]  "," >> FILENAME; }
+	        { print "   $" variable_list[variable_index]  "," >> GEN_MODEL; }
 	    else
-		{ print "   $" variable_list[variable_index] >> FILENAME; }
+		{ print "   $" variable_list[variable_index] >> GEN_MODEL; }
 	}
-	print "   );" >> FILENAME;	
+	print "   );" >> GEN_MODEL;	
 
 #-----------------------------------------------------------------------------------
 	
@@ -347,39 +402,39 @@ function write_load() {
 	# $this->db_error->serialize();
 	# $this->db_warning->serialize();
 
-	print "   if( $stmt->fetch() == TRUE )" >> FILENAME;
-	print "   (" >> FILENAME;
+	print "   if( $stmt->fetch() == TRUE )" >> GEN_MODEL;
+	print "   (" >> GEN_MODEL;
 	for ( variable_index in variable_list )
 	{
 	    variable = variable_list[variable_index];
-	    print "   $this->set_"  variable  "( $" variable " );" >> FILENAME;
+	    print "   $this->set_"  variable  "( $" variable " );" >> GEN_MODEL;
 	}
-	print "   $stmt->close();" >> FILENAME;
-	print "   }" >> FILENAME;
-	print "   else" >> FILENAME;
-	print "   {" >> FILENAME;
-	print "   $this->db_warning->not_found();" >> FILENAME;
-	print "   }" >> FILENAME;
-	print "   $mysqli->close();" >> FILENAME;
-	print "   }" >> FILENAME;
-	print "   else" >> FILENAME;
-	print "   {" >> FILENAME;
-	print "   $this->db_error->load_error();" >> FILENAME;
-	print "   }" >> FILENAME;
-	print "   $this->db_error->serialize();" >> FILENAME;
-	print "   $this->db_warning->serialize();" >> FILENAME;		
+	print "   $stmt->close();" >> GEN_MODEL;
+	print "   }" >> GEN_MODEL;
+	print "   else" >> GEN_MODEL;
+	print "   {" >> GEN_MODEL;
+	print "   $this->db_warning->not_found();" >> GEN_MODEL;
+	print "   }" >> GEN_MODEL;
+	print "   $mysqli->close();" >> GEN_MODEL;
+	print "   }" >> GEN_MODEL;
+	print "   else" >> GEN_MODEL;
+	print "   {" >> GEN_MODEL;
+	print "   $this->db_error->load_error();" >> GEN_MODEL;
+	print "   }" >> GEN_MODEL;
+	print "   $this->db_error->serialize();" >> GEN_MODEL;
+	print "   $this->db_warning->serialize();" >> GEN_MODEL;		
 	
 	#-----------------------------------------------------------------------------------
 	
-	print "}" >> FILENAME;
- 	print "" >> FILENAME;
+	print "}" >> GEN_MODEL;
+ 	print "" >> GEN_MODEL;
 }
 
 #-----------------------------------------------------------------------------------
 # define the update function of the model
 function write_update() {
-        print "// -------------------------------------------------------------\n" >> FILENAME;    
-    	print "// define the update function of the model"  >> FILENAME;
+        print "// -------------------------------------------------------------\n" >> GEN_MODEL;    
+    	print "// define the update function of the model"  >> GEN_MODEL;
 
 #-----------------------------------------------------------------------------------
 	
@@ -392,14 +447,17 @@ function write_update() {
 	# $read_stamp = $this->get_read_stamp();
 	# $text = $this->get_text();
 	
-	print "public function update()" >> FILENAME;
-	print "{" >> FILENAME;
-	print "   require \"data_connect.php\";" >> FILENAME;
+	print "public function update()" >> GEN_MODEL;
+	print "{" >> GEN_MODEL;
+	print "   require \"data_connect.php\";" >> GEN_MODEL;
 
 	for ( variable_index in variable_list )
 	{
-	    variable = variable_list[variable_index];
-	    print "   $"  variable  " =  $this->get_" variable "();" >> FILENAME;
+	    if( type_list[variable_index] != "time_stamp" )
+	    {
+		variable = variable_list[variable_index];
+		print "   $"  variable  " =  $this->get_" variable "();" >> GEN_MODEL;
+	    }
 	}
 
 #-----------------------------------------------------------------------------------	
@@ -415,18 +473,21 @@ function write_update() {
 	#{
 	# $stmt->bind_param
 
-	print "   if( $stmt = $mysqli->prepare(" >> FILENAME;
-	print "   \"UPDATE " classname " SET" >> FILENAME;	
+	print "   if( $stmt = $mysqli->prepare(" >> GEN_MODEL;
+	print "   \"UPDATE " classname " SET" >> GEN_MODEL;	
 	for ( variable_index in variable_list )
 	{
-	    if( variable_index < ( arraylength - 1 ) )
-	        { print "   " variable_list[variable_index] "=?," >> FILENAME; }
-	    else
-		{ print "   " variable_list[variable_index] "=?" >> FILENAME; }
+	    if( type_list[variable_index] != "time_stamp" )
+	    {
+		if( variable_index < ( arraylength - 1 ) )
+	        { print "   " variable_list[variable_index] "=?," >> GEN_MODEL; }
+		else
+		{ print "   " variable_list[variable_index] "=?" >> GEN_MODEL; }
+	    }
 	}
-	print "   WHERE id=?\")" >> FILENAME;	
-	print "   {" >> FILENAME;
-	print "   $stmt->bind_param" >> FILENAME;
+	print "   WHERE id=?\")" >> GEN_MODEL;	
+	print "   {" >> GEN_MODEL;
+	print "   $stmt->bind_param" >> GEN_MODEL;
 	
 #-----------------------------------------------------------------------------------	      
 
@@ -440,21 +501,27 @@ function write_update() {
 	# $id
 	# );
 
-	print "   (" >> FILENAME;
-	printf "   \"" >> FILENAME;
+	print "   (" >> GEN_MODEL;
+	printf "   \"" >> GEN_MODEL;
 	
 	for ( variable_index in variable_list )
-	{ printf get_datatype_character( type_list[variable_index] ) >> FILENAME; }
-	print "\"," >> FILENAME;
+	{
+	    if( type_list[variable_index] != "time_stamp" )
+	    { printf get_datatype_character( type_list[variable_index] ) >> GEN_MODEL; }
+	}
+	print "\"," >> GEN_MODEL;
 
 	for ( variable_index in variable_list )
 	{
-	    if( variable_index < ( arraylength - 1 ) )
-	        { print "   $" variable_list[variable_index] "," >> FILENAME; }
-	    else
-		{ print "   $" variable_list[variable_index] >> FILENAME; }
+	    if( type_list[variable_index] != "time_stamp" )
+	    {
+		if( variable_index < ( arraylength - 1 ) )
+	        { print "   $" variable_list[variable_index] "," >> GEN_MODEL; }
+		else
+		{ print "   $" variable_list[variable_index] >> GEN_MODEL; }
+	    }
 	}
-	print "   );" >> FILENAME;	
+	print "   );" >> GEN_MODEL;	
 
 #-----------------------------------------------------------------------------------
       
@@ -468,27 +535,27 @@ function write_update() {
 	# $mysqli->close();
 	# $this->db_error->serialize();
 
-	print "   $stmt->execute();" >> FILENAME;
-	print "   $stmt->close();" >> FILENAME;
-	print "   };" >> FILENAME;
-	print "   else" >> FILENAME;
-	print "   {" >> FILENAME;
-	print "   $this->db_error->update_error();" >> FILENAME;
-	print "   }" >> FILENAME;
-	print "   $mysqli->close();" >> FILENAME;
-	print "   $this->db_error->serialize();" >> FILENAME;	      		
+	print "   $stmt->execute();" >> GEN_MODEL;
+	print "   $stmt->close();" >> GEN_MODEL;
+	print "   };" >> GEN_MODEL;
+	print "   else" >> GEN_MODEL;
+	print "   {" >> GEN_MODEL;
+	print "   $this->db_error->update_error();" >> GEN_MODEL;
+	print "   }" >> GEN_MODEL;
+	print "   $mysqli->close();" >> GEN_MODEL;
+	print "   $this->db_error->serialize();" >> GEN_MODEL;	      		
 
 #-----------------------------------------------------------------------------------
       
-	print "}" >> FILENAME;
- 	print "" >> FILENAME;
+	print "}" >> GEN_MODEL;
+ 	print "" >> GEN_MODEL;
 }
 
 #-----------------------------------------------------------------------------------
 # define the delete function of the model
 function write_delete() {
-        print "// -------------------------------------------------------------\n" >> FILENAME;    
-    	print "// define the delete function of the model"  >> FILENAME;
+        print "// -------------------------------------------------------------\n" >> GEN_MODEL;    
+    	print "// define the delete function of the model"  >> GEN_MODEL;
 
         # public function delete()
         # {
@@ -510,33 +577,33 @@ function write_delete() {
 	# $this->db_error->serialize();
         # }	
       
-	print "public function delete()" >> FILENAME;
-	print "{" >> FILENAME;
-	print "   require \"data_connect.php\";" >> FILENAME;
-	print "   $id = $this->get_id();" >> FILENAME;
-	print "   if( $stmt = $mysqli->prepare(" >> FILENAME;
-	print "   \"DELETE FROM " classname >> FILENAME;
-	print "   WHERE id=?\"))" >> FILENAME;
-	print "   {" >> FILENAME;
-	print "   $stmt->bind_param(\"i\",  $id);" >> FILENAME;
-	print "   $stmt->execute();" >> FILENAME;
-	print "   $stmt->close();" >> FILENAME;
-	print "   }" >> FILENAME;
-	print "   else" >> FILENAME;
-	print "   {" >> FILENAME;
-	print "   $this->db_error->delete_error();" >> FILENAME;
-	print "   }" >> FILENAME;
-	print "   $mysqli->close();" >> FILENAME;
-	print "   $this->db_error->serialize();" >> FILENAME;
-	print "}" >> FILENAME;
- 	print "" >> FILENAME;
+	print "public function delete()" >> GEN_MODEL;
+	print "{" >> GEN_MODEL;
+	print "   require \"data_connect.php\";" >> GEN_MODEL;
+	print "   $id = $this->get_id();" >> GEN_MODEL;
+	print "   if( $stmt = $mysqli->prepare(" >> GEN_MODEL;
+	print "   \"DELETE FROM " classname >> GEN_MODEL;
+	print "   WHERE id=?\"))" >> GEN_MODEL;
+	print "   {" >> GEN_MODEL;
+	print "   $stmt->bind_param(\"i\",  $id);" >> GEN_MODEL;
+	print "   $stmt->execute();" >> GEN_MODEL;
+	print "   $stmt->close();" >> GEN_MODEL;
+	print "   }" >> GEN_MODEL;
+	print "   else" >> GEN_MODEL;
+	print "   {" >> GEN_MODEL;
+	print "   $this->db_error->delete_error();" >> GEN_MODEL;
+	print "   }" >> GEN_MODEL;
+	print "   $mysqli->close();" >> GEN_MODEL;
+	print "   $this->db_error->serialize();" >> GEN_MODEL;
+	print "}" >> GEN_MODEL;
+ 	print "" >> GEN_MODEL;
       }
 
 #-----------------------------------------------------------------------------------
 # define the getJSON function of the model
 function write_getJSON() {
-        print "// -------------------------------------------------------------\n" >> FILENAME;    
-    	print "// define the getJSON function of the model"  >> FILENAME;
+        print "// -------------------------------------------------------------\n" >> GEN_MODEL;    
+    	print "// define the getJSON function of the model"  >> GEN_MODEL;
 
 	# return
 	# "{" .
@@ -547,9 +614,9 @@ function write_getJSON() {
 	# "\"text\":\"" . $this->get_text() . "\"" .
 	# "}";
 	    
-	print "public function getJSON()" >> FILENAME;
-	print "   return" >> FILENAME;
-	print "   \"{\" ." >> FILENAME;	
+	print "public function getJSON()" >> GEN_MODEL;
+	print "   return" >> GEN_MODEL;
+	print "   \"{\" ." >> GEN_MODEL;	
 
 	for ( variable_index in variable_list )
 	{
@@ -559,20 +626,20 @@ function write_getJSON() {
 	    if( variable_index < ( arraylength - 1 ) )
 	    {
  		if( type == "Integer" )
-  	        { print "   \"\\\"" var "\\\":\" . $this->get_" var "() .  \",\" ." >> FILENAME; }
+  	        { print "   \"\\\"" var "\\\":\" . $this->get_" var "() .  \",\" ." >> GEN_MODEL; }
 		else
-	        { print "   \"\\\"" var "\\\":\\\"\" . $this->get_" var "() .  \"\\\",\" ." >> FILENAME; }
+	        { print "   \"\\\"" var "\\\":\\\"\" . $this->get_" var "() .  \"\\\",\" ." >> GEN_MODEL; }
 	    }
 	    else
 	    {
 		if( type == "Integer" )
-	        { print "   \"\\\"" var "\\\":\" . $this->get_" var "() . " >> FILENAME;}
+	        { print "   \"\\\"" var "\\\":\" . $this->get_" var "() . " >> GEN_MODEL;}
 		else
-	        { print "   \"\\\"" var "\\\":\\\"\" . $this->get_" var "() .  \"\\\"\" ." >> FILENAME; }		    
+	        { print "   \"\\\"" var "\\\":\\\"\" . $this->get_" var "() .  \"\\\"\" ." >> GEN_MODEL; }		    
 	    }	
 	}
-	print "   \"}\";" >> FILENAME;
- 	print "" >> FILENAME;
+	print "   \"}\";" >> GEN_MODEL;
+ 	print "" >> GEN_MODEL;
 }
 
 #-----------------------------------------------------------------------------------
@@ -599,8 +666,7 @@ function add_includes(myincludes) {
 # add the complete line from the origin file
 
 function add_class(myclass) {
-     classname = myclass;
-     awk '{split($0,a,"|"); print a[3],a[2],a[1]}'
+     classname = substr(myclass,11);
 }
 
 #-----------------------------------------------------------------------------------
