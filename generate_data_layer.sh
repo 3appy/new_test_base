@@ -38,7 +38,7 @@ do
 	    { touch "$ORG_LIST_MODEL"; }
 	fi
 	
-	awk -v GEN_MODEL="$ORG_GENERATED_MODEL" -v MODEL="$ORG_GENERATED_LIST_MODEL" -f generatefile.awk $filename
+	awk -v GEN_MODEL="$ORG_GENERATED_MODEL" -v GEN_LIST_MODEL="$ORG_GENERATED_LIST_MODEL" -f generatefile.awk $filename
     fi
 done
 echo "quit" >> file_transfer_list.txt

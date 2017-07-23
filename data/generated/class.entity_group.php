@@ -164,10 +164,8 @@ class entity_group
     /**
      *
      * @access public
-     * @author Bernd Schröder
-     * @version 1.0
+     * @author firstname and lastname of author, <author@example.org>
      */
-/*NEW*/
     public function get_avatar_icon_path()
     {
      if( defined('__GEN_ROOT__') == FALSE )
@@ -180,8 +178,12 @@ class entity_group
      "http://www.3appy.com" .
      $new_image->get_avatar_icon();
     }
-
-
+    /**
+     *
+     * @access public
+     * @author Bernd Schröder
+     * @version 1.0
+     */
     public function get_avatar_icon()
     {
      if( defined('__GEN_ROOT__') == FALSE )
@@ -415,6 +417,11 @@ class entity_group
      // Member of a sub group ( team / event )
      $this->generate_is_sub_group_navigation($member);
      break;
+     case ( (int)9 ):
+     // 9 
+     // Member with a profile but not member of the organisational structure
+     $this->generate_without_connection_navigation($member);
+     break;
      case ( (int)11 ):
      // 11
      // member access to admin
@@ -424,11 +431,6 @@ class entity_group
      // 12
      // admin access
      $this->generate_globadmin_navigation($member);
-     break;
-     case ( (int)9 ):
-     // 9 
-     // Member with a profile but not member of the organisational structure
-     $this->generate_without_connection_navigation($member);
      break;
      default:
      $this->generate_without_connection_navigation($member);
