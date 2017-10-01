@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 /**
  * generate me
  *
- * @author Bernd Schröder
+ * @author Bernd SchrÃ¶der
  * @package generated
  * @version 1.0
  */
@@ -33,7 +33,7 @@ require_once('class.general_group.php');
  * generate me
  *
  * @access public
- * @author Bernd Schröder
+ * @author Bernd SchrÃ¶der
  * @package generated
  * @version 1.0
  */

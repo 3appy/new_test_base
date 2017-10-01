@@ -3,14 +3,7 @@
 error_reporting(E_ALL);
 
 /**
- * untitledModel - generated\class.member_message.php
- *
- * $Id$
- *
- * This file is part of untitledModel.
- *
- * Automatically generated on 08.12.2014, 19:45:17 with ArgoUML PHP module 
- * (last revised $Date: 2010-01-12 20:14:42 +0100 (Tue, 12 Jan 2010) $)
+ * generate me
  *
  * @author firstname and lastname of author, <author@example.org>
  * @package generated
@@ -36,7 +29,7 @@ require_once('class.general_group.php');
 // section -64--88--78-25-1362e296:147f7ea7a9e:-8000:0000000000001676-constants end
 
 /**
- * Short description of class generated_member_message
+ * generate me
  *
  * @access public
  * @author firstname and lastname of author, <author@example.org>
@@ -97,6 +90,14 @@ class generated_member_message
      * @var String
      */
     private $text = null;
+
+    /**
+     * Short description of attribute media_id
+     *
+     * @access private
+     * @var Integer
+     */
+    private $media_id = null;
 
     // --- OPERATIONS ---
 

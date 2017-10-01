@@ -45,10 +45,10 @@ else
 }
 
 END {
-    print "rewrite File: " GEN_MODEL;
+    print "hallo rewrite File: " GEN_MODEL;
     write_generated_model();
     print "";
-    print "rewrite File: " GEN_LIST_MODEL;
+    print "huhu rewrite File: " GEN_LIST_MODEL;
     write_generated_list_model();    
 }
 

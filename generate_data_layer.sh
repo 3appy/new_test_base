@@ -10,6 +10,7 @@ DOMAIN='wsb4656595601'
 find -type f -name "*.php" | while read filename;
 do
     if grep -q '* generate me' "$filename"; then
+	printf "finding: $filename \n";	
 	MYFILE=$( echo $filename | awk 'BEGIN { FS="/" } {print $NF }' );
 	MYFILE=$( echo $MYFILE | awk '{print substr( $0, 0, length($0) - 4 ) }' );
 	printf "compiling myfile: $MYFILE \n";
@@ -37,8 +38,21 @@ do
 	if [ ! -f $ORG_LIST_MODEL ]; then
 	    { touch "$ORG_LIST_MODEL"; }
 	fi
+
 	
+	printf "\n";	
+	printf "new file -------------------------------------- $ORG_GENERATED_MODEL \n";
+	printf "\n";	
+	
+	printf "\n";	
+	printf "new file -------------------------------------- $ORG_GENERATED_LIST_MODEL \n";
+	printf "\n";	
+
 	awk -v GEN_MODEL="$ORG_GENERATED_MODEL" -v GEN_LIST_MODEL="$ORG_GENERATED_LIST_MODEL" -f generatefile.awk $filename
+
+	printf "\n";	
+	printf "new file -------------------------------------- \n";
+	printf "\n";	
     fi
 done
 echo "quit" >> file_transfer_list.txt
