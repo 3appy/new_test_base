@@ -16,7 +16,8 @@ do
 
 	DESTINATION=$( echo $filename | awk '{print substr( $0, 3 ) }' );
         DESTINATION="$DOMAIN/$DESTINATION";
-
+	
+#	echo  "put $filename $DESTINATION";
 	echo  "put $filename $DESTINATION" >> file_transfer_list.txt
     fi
 done

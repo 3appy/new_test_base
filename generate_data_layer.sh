@@ -11,25 +11,54 @@ find -type f -name "*.php" | while read filename;
 do
     if grep -q '* generate me' "$filename"; then
 	printf "finding: $filename \n";	
+	
+	# extracting the name of the file without path and extension 
 	MYFILE=$( echo $filename | awk 'BEGIN { FS="/" } {print $NF }' );
-	MYFILE=$( echo $MYFILE | awk '{print substr( $0, 0, length($0) - 4 ) }' );
-	printf "compiling myfile: $MYFILE \n";
+	MYFILE=$( echo $MYFILE | awk '{print substr( $0, 0, length($0) - 3 ) }' );
+	printf "rare filename: $MYFILE \n";	
+
+	ORG_GENERATED_MODEL="data/generated/class.generated_$MYFILE.php";
+	ORG_GENERATED_LIST_MODEL="data/generated/class.generated_$MYFILE"'_'"list.php";
+	ORG_MODEL="data/class.$MYFILE.php";	
+	ORG_LIST_MODEL="data/class.$MYFILE"'_'"list.php";
+	ORG_API_MODEL="/api/$MYFILE.php";
+	
+	printf "\n";	
+	printf " $ORG_GENERATED_MODEL \n";
+	printf " $ORG_GENERATED_LIST_MODEL \n";
+	printf " $ORG_MODEL \n";
+	printf " $ORG_LIST_MODEL \n";	
+	printf " $ORG_API_MODEL \n";		
+	printf "\n";	
 
 	DEST_GENERATED_MODEL="$DOMAIN/data/generated/class.generated_$MYFILE.php";
 	DEST_GENERATED_LIST_MODEL="$DOMAIN/data/generated/class.generated_$MYFILE"'_'"list.php";
 	DEST_MODEL="$DOMAIN/data/class.$MYFILE.php";	
 	DEST_LIST_MODEL="$DOMAIN/data/class.$MYFILE"'_'"list.php";
-	
-	ORG_GENERATED_MODEL="data/generated/class.generated_$MYFILE.php";
-	ORG_GENERATED_LIST_MODEL="data/generated/class.generated_$MYFILE"'_'"list.php";
-	ORG_MODEL="data/class.$MYFILE.php";	
-	ORG_LIST_MODEL="data/class.$MYFILE"'_'"list.php";
+	DEST_API_MODEL="$DOMAIN/api/$MYFILE.php";
+
+	printf "\n";	
+	printf " $DEST_GENERATED_MODEL \n";
+	printf " $DEST_GENERATED_LIST_MODEL \n";
+	printf " $DEST_MODEL \n";
+	printf " $DEST_LIST_MODEL \n";	
+	printf " $DEST_API_MODEL \n";		
+	printf "\n";	
+
+	echo  "put $ORG_GENERATED_MODEL $DEST_GENERATED_MODEL" >> file_transfer_list.txt
+	echo  "put $ORG_GENERATED_LIST_MODEL $DEST_GENERATED_LIST_MODEL" >> file_transfer_list.txt	
+	echo  "put $ORG_MODEL $DEST_MODEL" >> file_transfer_list.txt	
+	echo  "put $ORG_LIST_MODEL $DEST_LIST_MODEL" >> file_transfer_list.txt	
+	echo  "put $ORG_API_MODEL $DEST_API_MODEL" >> file_transfer_list.txt	
 
 	rm "$ORG_GENERATED_MODEL";	
 	touch "$ORG_GENERATED_MODEL";
 
 	rm "$ORG_GENERATED_LIST_MODEL";	
 	touch "$ORG_GENERATED_LIST_MODEL";
+	
+	rm "$ORG_API_MODEL";	
+	touch "$ORG_API_MODEL";	
 
 	if [ ! -f $ORG_MODEL ]; then
 	    { touch "$ORG_MODEL"; }
@@ -39,20 +68,11 @@ do
 	    { touch "$ORG_LIST_MODEL"; }
 	fi
 
-	
-	printf "\n";	
-	printf "new file -------------------------------------- $ORG_GENERATED_MODEL \n";
-	printf "\n";	
-	
-	printf "\n";	
-	printf "new file -------------------------------------- $ORG_GENERATED_LIST_MODEL \n";
+	printf "compiling myfile: $MYFILE \n";	
 	printf "\n";	
 
-	awk -v GEN_MODEL="$ORG_GENERATED_MODEL" -v GEN_LIST_MODEL="$ORG_GENERATED_LIST_MODEL" -f generatefile.awk $filename
-
-	printf "\n";	
-	printf "new file -------------------------------------- \n";
-	printf "\n";	
+#	awk -v GEN_MODEL="$ORG_GENERATED_MODEL" -v GEN_LIST_MODEL="$ORG_GENERATED_LIST_MODEL" -f generatefile.awk $filename
+	
     fi
 done
 echo "quit" >> file_transfer_list.txt
@@ -85,6 +105,6 @@ cat  file_transfer_list.txt
 
 #printf "done\n";
 #printf "\n\n";
-rm file_transfer_list.txt
+#rm file_transfer_list.txt
 
 
