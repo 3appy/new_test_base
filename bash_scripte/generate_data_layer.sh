@@ -14,7 +14,10 @@ do
 	
 	# extracting the name of the file without path and extension 
 	MYFILE=$( echo $filename | awk 'BEGIN { FS="/" } {print $NF }' );
-	MYFILE=$( echo $MYFILE | awk '{print substr( $0, 0, length($0) - 3 ) }' );
+	# using the Laptop -3
+	#MYFILE=$( echo $MYFILE | awk '{print substr( $0, 0, length($0) - 3 ) }' );
+	# using the workstation -4
+	MYFILE=$( echo $MYFILE | awk '{print substr( $0, 0, length($0) - 4 ) }' );
 	printf "rare filename: $MYFILE \n";	
 
 	ORG_GENERATED_MODEL="../data/generated/class.generated_$MYFILE.php";
